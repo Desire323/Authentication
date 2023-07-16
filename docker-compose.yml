@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  authentication-service:
+    build: ./
+    image: authentication-service
+    container_name: authentication-service
+    environment:
+      SECRET_KEY: VnfXPMBfWuCV/PpmfwGHgaNX0amm5ehi81ND6t5O6/Q=
+      SPRING_PROFILES_ACTIVE: prod
+      USER_SERVICE_URL: http://user-service:8080
+    ports:
+      - "8081:8080"
+    networks:
+      - desire
+
+networks:
+  desire:
+    external: true
