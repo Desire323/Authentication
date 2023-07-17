@@ -3,7 +3,6 @@ package com.desire323.authentiacation.controller;
 import com.desire323.authentiacation.service.AuthenticationService;
 import com.desire323.authentiacation.DTO.AuthenticationDTO;
 import com.desire323.authentiacation.DTO.RegisterRequest;
-import com.desire323.authentiacation.DTO.TokenResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
