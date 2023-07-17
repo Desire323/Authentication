@@ -37,17 +37,18 @@ public class AuthenticationService {
     private String baseUrl = System.getenv("USER_SERVICE_URL");
 
     public String register(RegisterRequest request) {
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
         ResponseEntity<RegisterResponse> responseEntity = restTemplate.postForEntity(baseUrl, request, RegisterResponse.class);
         RegisterResponse response = responseEntity.getBody();
         int id = response.getId();
         String email = response.getEmail();
-        TokenResponse tokenResponse = generateJwt(id, email);
 
-        return tokenResponse.getToken();
+        return generateJwt(id, email);
     }
 
     public String authenticate(AuthenticationDTO request) {
         String url = baseUrl + "/email/" + request.getEmail();
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
         ResponseEntity<AuthenticationResponse> responseEntity = restTemplate.getForEntity (url, AuthenticationResponse.class);
         AuthenticationResponse response = responseEntity.getBody();
 
@@ -66,15 +67,13 @@ public class AuthenticationService {
                 authorities
         );
 
-        return generateJwt(response.getId(), response.getEmail()).getToken();
+        return generateJwt(response.getId(), response.getEmail());
     }
 
-    public TokenResponse generateJwt(int id, String email){
+    public String generateJwt(int id, String email){
         Map<String, Object> extraClaim = new HashMap<>();
         extraClaim.put("id", id);
         String jwtToken = jwtService.generateToken(extraClaim, email);
-        return new TokenResponse.Builder()
-                .setToken(jwtToken)
-                .build();
+        return jwtToken;
     }
 }
