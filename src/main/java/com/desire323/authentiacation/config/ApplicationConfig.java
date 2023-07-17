@@ -27,7 +27,6 @@ public class ApplicationConfig {
                 System.getenv("USER_SERVICE_URL") + "/email/" + username, AuthenticationResponse.class
         ).getBody();
     }
-//ADD USER CONTROLLER ENDPOINT
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();

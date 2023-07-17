@@ -48,13 +48,13 @@ public class AuthenticationService {
 
     public String authenticate(AuthenticationDTO request) {
         String url = baseUrl + "/email/" + request.getEmail();
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
         ResponseEntity<AuthenticationResponse> responseEntity = restTemplate.getForEntity (url, AuthenticationResponse.class);
         AuthenticationResponse response = responseEntity.getBody();
 
-        if(!response.getPassword().equals(request.getPassword())) {
+        if(!passwordEncoder.matches(request.getPassword(), response.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
+
 
         Collection<? extends GrantedAuthority> authorities = response.getAuthorities()
                 .stream()
