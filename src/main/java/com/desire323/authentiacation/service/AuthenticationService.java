@@ -1,6 +1,7 @@
 package com.desire323.authentiacation.service;
 
 import com.desire323.authentiacation.DTO.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +30,12 @@ public class AuthenticationService {
     @Autowired
     public AuthenticationService(PasswordEncoder passwordEncoder,
                                  JwtService jwtService,
-                                 AuthenticationProvider authenticationProvider) {
+                                 AuthenticationProvider authenticationProvider,
+                                 RestTemplate restTemplate) {
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationProvider = authenticationProvider;
-        this.restTemplate = new RestTemplate();
+        this.restTemplate = restTemplate;
     }
     private String baseUrl = System.getenv("USER_SERVICE_URL");
 
@@ -68,6 +71,22 @@ public class AuthenticationService {
         );
 
         return generateJwt(response.getId(), response.getEmail());
+    }
+
+    public Optional<ValidationDTO> validateToken(String token){
+        String url = baseUrl + "/email/" + jwtService.extractUsername(token);
+        ResponseEntity<AuthenticationResponse> responseEntity = restTemplate.getForEntity (url, AuthenticationResponse.class);
+        System.out.println("\n\n\n responseEntity: " + responseEntity + "\n\n\n");
+        AuthenticationResponse response = responseEntity.getBody();
+        System.out.println("\n\n\n response: " + response + "\n\n\n");
+
+        ValidationDTO validationDTO = new ValidationDTO(response.getId(), response.getEmail());
+        System.out.println("\n\n\n OK: " + validationDTO + "\n\n\n");
+
+        if (!jwtService.isTokenValid(token, response.getEmail())){
+            return Optional.empty();
+        }
+        return Optional.of(validationDTO);
     }
 
     public String generateJwt(int id, String email){
