@@ -4,15 +4,15 @@ services:
   authentication-service:
     build: ./
     image: authentication-service
-    container_name: random-service-name
+    container_name: authentication-service
     environment:
       SECRET_KEY: VnfXPMBfWuCV/PpmfwGHgaNX0amm5ehi81ND6t5O6/Q=
       SPRING_PROFILES_ACTIVE: prod
       SPRING_APPLICATION_NAME: authentication-service
-      USER_SERVICE_URL: http://USER-SERVICE:8080
+      USER_SERVICE_URL: http://USER-SERVICE:8080/user
       SERVICE_REGISTRY_URL: http://service-registry:8761/eureka
-    ports:
-      - "8081:8080"
+#    ports:
+#      - "8081:8080"
     networks:
       - desire
 
