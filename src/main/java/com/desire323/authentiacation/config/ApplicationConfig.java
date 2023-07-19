@@ -4,29 +4,41 @@ package com.desire323.authentiacation.config;
 import com.desire323.authentiacation.DTO.AuthenticationResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 public class ApplicationConfig {
 
-    private RestTemplate restTemplate;
-
-    public ApplicationConfig() {
-        this.restTemplate = new RestTemplate();
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> (UserDetails) restTemplate.getForEntity(
-                System.getenv("USER_SERVICE_URL") + "/email/" + username, AuthenticationResponse.class
-        ).getBody();
-    }
+        return username -> {
+            AuthenticationResponse response = restTemplate().getForEntity(
+                    System.getenv("USER_SERVICE_URL") + "/email/" + username, AuthenticationResponse.class
+            ).getBody();
+            return new User(response.getEmail(), response.getPassword(), response.getAuthorities().stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList()));
+        };
+        }
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
