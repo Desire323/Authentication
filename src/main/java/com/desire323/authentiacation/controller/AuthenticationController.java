@@ -1,10 +1,7 @@
 package com.desire323.authentiacation.controller;
 
-import com.desire323.authentiacation.DTO.Token;
-import com.desire323.authentiacation.DTO.ValidationDTO;
+import com.desire323.authentiacation.DTO.*;
 import com.desire323.authentiacation.service.AuthenticationService;
-import com.desire323.authentiacation.DTO.AuthenticationDTO;
-import com.desire323.authentiacation.DTO.RegisterRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +24,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthenticationDTO request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody AuthenticationDTO request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
@@ -43,7 +40,6 @@ public class AuthenticationController {
 
     @PostMapping("/validate")
     public ResponseEntity<ValidationDTO> validate(@RequestBody Token tokenObj) {
-        System.out.println("\n\n\ntoken from gateway: " + tokenObj.getToken() + " \n\n\n");
         Optional<ValidationDTO> optionalResponse = authenticationService.validateToken(tokenObj.getToken());
         if(optionalResponse.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

@@ -49,7 +49,7 @@ public class AuthenticationService {
         return generateJwt(id, email);
     }
 
-    public String authenticate(AuthenticationDTO request) {
+    public LoginResponse authenticate(AuthenticationDTO request) {
         String url = baseUrl + "/email/" + request.getEmail();
         ResponseEntity<AuthenticationResponse> responseEntity = restTemplate.getForEntity (url, AuthenticationResponse.class);
         AuthenticationResponse response = responseEntity.getBody();
@@ -69,19 +69,16 @@ public class AuthenticationService {
                 response.getPassword(),
                 authorities
         );
-
-        return generateJwt(response.getId(), response.getEmail());
+        System.out.println("\n\n\nResponse.getFirstname: " + response.getFirstname() + "\n\n\n");
+        String jwt =  generateJwt(response.getId(), response.getEmail());
+        return new LoginResponse(response.getFirstname(), response.getLastname(), jwt);
     }
 
     public Optional<ValidationDTO> validateToken(String token){
         String url = baseUrl + "/email/" + jwtService.extractUsername(token);
         ResponseEntity<AuthenticationResponse> responseEntity = restTemplate.getForEntity (url, AuthenticationResponse.class);
-        System.out.println("\n\n\n responseEntity: " + responseEntity + "\n\n\n");
         AuthenticationResponse response = responseEntity.getBody();
-        System.out.println("\n\n\n response: " + response + "\n\n\n");
-
         ValidationDTO validationDTO = new ValidationDTO(response.getId(), response.getEmail());
-        System.out.println("\n\n\n OK: " + validationDTO + "\n\n\n");
 
         if (!jwtService.isTokenValid(token, response.getEmail())){
             return Optional.empty();
