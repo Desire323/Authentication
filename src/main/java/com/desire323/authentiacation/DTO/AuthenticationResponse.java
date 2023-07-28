@@ -6,9 +6,23 @@ import java.util.List;
 
 public class AuthenticationResponse {
     private int id;
+    private String firstname;
+    private String lastname;
     private String email;
     private String password;
     private List<String> authorities;
+
+    public AuthenticationResponse(UserDetails userDetails) {
+    }
+    public AuthenticationResponse(int id, String firstname, String lastname, String email,
+                                  String password, List<String> authorities) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
 
     public int getId() {
         return id;
@@ -16,6 +30,22 @@ public class AuthenticationResponse {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {
