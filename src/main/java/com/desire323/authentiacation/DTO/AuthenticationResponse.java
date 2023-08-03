@@ -14,6 +14,9 @@ public class AuthenticationResponse {
 
     public AuthenticationResponse(UserDetails userDetails) {
     }
+
+    public AuthenticationResponse() {
+    }
     public AuthenticationResponse(Long id, String firstname, String lastname, String email,
                                   String password, List<String> authorities) {
         this.id = id;
