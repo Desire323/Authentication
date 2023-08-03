@@ -1,10 +1,10 @@
 package com.desire323.authentiacation.DTO;
 
 public class ValidationDTO {
-    private int id;
+    private Long id;
     private String email;
 
-    public ValidationDTO(int id, String email) {
+    public ValidationDTO(Long id, String email) {
         this.id = id;
         this.email = email;
     }
@@ -12,11 +12,11 @@ public class ValidationDTO {
     public ValidationDTO() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

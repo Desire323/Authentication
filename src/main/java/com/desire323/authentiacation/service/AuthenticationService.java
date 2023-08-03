@@ -1,7 +1,6 @@
 package com.desire323.authentiacation.service;
 
 import com.desire323.authentiacation.DTO.*;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -43,7 +42,7 @@ public class AuthenticationService {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         ResponseEntity<RegisterResponse> responseEntity = restTemplate.postForEntity(baseUrl, request, RegisterResponse.class);
         RegisterResponse response = responseEntity.getBody();
-        int id = response.getId();
+        Long id = response.getId();
         String email = response.getEmail();
 
         return generateJwt(id, email);
@@ -69,7 +68,6 @@ public class AuthenticationService {
                 response.getPassword(),
                 authorities
         );
-        System.out.println("\n\n\nResponse.getFirstname: " + response.getFirstname() + "\n\n\n");
         String jwt =  generateJwt(response.getId(), response.getEmail());
         return new LoginResponse(response.getFirstname(), response.getLastname(), jwt);
     }
@@ -86,7 +84,7 @@ public class AuthenticationService {
         return Optional.of(validationDTO);
     }
 
-    public String generateJwt(int id, String email){
+    public String generateJwt(Long id, String email){
         Map<String, Object> extraClaim = new HashMap<>();
         extraClaim.put("id", id);
         String jwtToken = jwtService.generateToken(extraClaim, email);

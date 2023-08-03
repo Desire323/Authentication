@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
 
 public class AuthenticationResponse {
-    private int id;
+    private Long id;
     private String firstname;
     private String lastname;
     private String email;
@@ -14,7 +14,7 @@ public class AuthenticationResponse {
 
     public AuthenticationResponse(UserDetails userDetails) {
     }
-    public AuthenticationResponse(int id, String firstname, String lastname, String email,
+    public AuthenticationResponse(Long id, String firstname, String lastname, String email,
                                   String password, List<String> authorities) {
         this.id = id;
         this.firstname = firstname;
@@ -24,11 +24,11 @@ public class AuthenticationResponse {
         this.authorities = authorities;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
