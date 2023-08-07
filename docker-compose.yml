@@ -11,8 +11,8 @@ services:
       SPRING_APPLICATION_NAME: authentication-service
       USER_SERVICE_URL: http://USER-SERVICE:8080/user
       SERVICE_REGISTRY_URL: http://service-registry:8761/eureka
-#    ports:
-#      - "8081:8080"
+    ports:
+      - "5005:8080"
     networks:
       - desire
 
